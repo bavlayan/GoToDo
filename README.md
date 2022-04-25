@@ -1,2 +1,2 @@
 # GoToDo
-GoToDo is app that is developed for learning golang.
+GoToDo is "to do" app that is developed for learning golang.
