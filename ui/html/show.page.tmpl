@@ -1,0 +1,20 @@
+{{template "base" .}}
+
+{{define "title"}}
+GoToDo - To Do Item
+{{end}}
+
+{{define "body"}}
+<div class="container py-3">
+    <header>
+        <div class="todo-header p-3 pb-md-4 mx-auto text-center">
+            <h1 class="display-7 fw-normal">{{.TodoItem.Description}}</h1>
+            <p class="fs-5 text-danger">It can wait for you to do since {{.TodoItem.CreatedDate}} &#x1F600;</p>
+            <button type="button" class="btn btn-success">Done</button>
+            <button type="button" class="btn btn-danger">Cancel</button>
+        </div>
+    </header>
+</div>
+    
+
+{{end}}
