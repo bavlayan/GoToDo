@@ -3,5 +3,27 @@
 {{define "title"}}Home{{end}}
 
 {{define "body"}}
-<h2>Daily's my to do items</h2>
+    <div class="container py-3">
+        <div class="row">
+            <div class="col"></div>
+            <div class="col-6">
+                {{if .TodoItems}}
+                    <ul class="list-group">
+                        {{range .TodoItems}}
+                            <li class="list-group-item">
+                                <input class="form-check-input me-1" type="checkbox" {{if .Completed}}checked{{end}} value="" id="{{.ID}}">
+                                    <span class="{{if .Completed}}text-success text-decoration-line-through{{else}}text-danger{{end}}">
+                                        {{.Description}}
+                                    </span> | <a href="/todoitems/item-details?id={{.ID}}" class="text-secondary">Details</a>                                   
+                                </input>                                                                                                     
+                            </li>
+                        {{end}}
+                    </ul>
+                {{else}}
+                    <p>There's nothing to see here.. Good! &#x1F60E;</p>
+                {{end}}
+            </div>
+            <div class="col"></div>
+        </div>   
+    </div>
 {{end}}

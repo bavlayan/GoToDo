@@ -6,15 +6,17 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"text/template"
 
 	"github.com/bavlayan/GoToDo/pkg/models/mysql"
 	_ "github.com/go-sql-driver/mysql"
 )
 
 type application struct {
-	errorLog  *log.Logger
-	infoLog   *log.Logger
-	todoitems *mysql.TodoItemModel
+	errorLog      *log.Logger
+	infoLog       *log.Logger
+	todoitems     *mysql.TodoItemModel
+	templateCache map[string]*template.Template
 }
 
 func main() {
@@ -33,12 +35,18 @@ func main() {
 
 	defer db.Close()
 
+	templateCache, err := newTemplateCache("./ui/html/")
+	if err != nil {
+		errorLog.Fatal(err)
+	}
+
 	app := &application{
 		errorLog: errorLog,
 		infoLog:  infoLog,
 		todoitems: &mysql.TodoItemModel{
 			DB: db,
 		},
+		templateCache: templateCache,
 	}
 
 	srv := &http.Server{

@@ -3,7 +3,6 @@ package main
 import (
 	"fmt"
 	"net/http"
-	"text/template"
 
 	"github.com/bavlayan/GoToDo/pkg/models"
 )
@@ -21,26 +20,11 @@ func (app *application) home(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	for _, td_item := range td_items {
-		fmt.Fprintf(w, "%v\n", td_item)
+	data := &templateData{
+		TodoItems: td_items,
 	}
 
-	/*files := []string{
-		"./ui/html/home.page.tmpl",
-		"./ui/html/base.layout.tmpl",
-		"./ui/html/footer.partial.tmpl",
-	}
-
-	ts, err := template.ParseFiles(files...)
-	if err != nil {
-		app.serverError(w, err)
-		return
-	}
-
-	err = ts.Execute(w, nil)
-	if err != nil {
-		app.serverError(w, err)
-	}*/
+	app.render(w, r, "home.page.tmpl", data)
 }
 
 func (app *application) showToDoItemDetails(w http.ResponseWriter, r *http.Request) {
@@ -62,22 +46,7 @@ func (app *application) showToDoItemDetails(w http.ResponseWriter, r *http.Reque
 
 	data := &templateData{TodoItem: td}
 
-	files := []string{
-		"./ui/html/show.page.tmpl",
-		"./ui/html/base.layout.tmpl",
-		"./ui/html/footer.partial.tmpl",
-	}
-
-	tf, err := template.ParseFiles(files...)
-	if err != nil {
-		app.serverError(w, err)
-		return
-	}
-
-	err = tf.Execute(w, data)
-	if err != nil {
-		app.serverError(w, err)
-	}
+	app.render(w, r, "show.page.tmpl", data)
 }
 
 func (app *application) createToDoItemDetails(w http.ResponseWriter, r *http.Request) {
