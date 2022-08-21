@@ -14,13 +14,13 @@
                                 <input class="form-check-input me-1" type="checkbox" {{if .Completed}}checked{{end}} value="" id="{{.ID}}">
                                     <span class="{{if .Completed}}text-success text-decoration-line-through{{else}}text-danger{{end}}">
                                         {{.Description}}
-                                    </span> | <a href="/todoitems/item-details?id={{.ID}}" class="text-secondary">Details</a>                                   
+                                    </span> | <a href="/todoitems/item-details/{{.ID}}" class="text-secondary">Details</a>                                   
                                 </input>                                                                                                     
                             </li>
                         {{end}}
                     </ul>
                 {{else}}
-                    <p>There's nothing to see here.. Good! &#x1F60E;</p>
+                    <p class="text-center">There's nothing to see here.. Good! &#x1F60E;</p>
                 {{end}}
             </div>
             <div class="col"></div>

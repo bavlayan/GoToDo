@@ -1,14 +1,23 @@
 package main
 
-import "net/http"
+import (
+	"net/http"
+
+	"github.com/bmizerany/pat"
+	"github.com/justinas/alice"
+)
 
 func (app *application) routes() http.Handler {
-	mux := http.NewServeMux()
-	mux.HandleFunc("/", app.home)
-	mux.HandleFunc("/todoitems/item-details", app.showToDoItemDetails)
-	mux.HandleFunc("/todoitems/create-todo-item", app.createToDoItemDetails)
+
+	goToDo_middleware := alice.New(app.recoverPanic, app.logRequest, secureHeaders)
+
+	mux := pat.New()
+	mux.Get("/", http.HandlerFunc(app.home))
+	mux.Get("/todoitems/item-details/:id", http.HandlerFunc(app.showToDoItemDetails))
+	mux.Post("/todoitems/create-todo-item", http.HandlerFunc(app.createToDoItem))
+	mux.Get("/todoitems/create-todo-item", http.HandlerFunc(app.createToDoItemFrom))
 
 	fileServer := http.FileServer(http.Dir("./ui/static/"))
-	mux.Handle("/static/", http.StripPrefix("/static", fileServer))
-	return app.logRequest(secureHeaders(mux))
+	mux.Get("/static/", http.StripPrefix("/static", fileServer))
+	return goToDo_middleware.Then(mux)
 }

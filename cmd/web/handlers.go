@@ -8,12 +8,6 @@ import (
 )
 
 func (app *application) home(w http.ResponseWriter, r *http.Request) {
-
-	if r.URL.Path != "/" {
-		app.notFound(w)
-		return
-	}
-
 	td_items, err := app.todoitems.GetDaily()
 	if err != nil {
 		app.serverError(w, err)
@@ -29,7 +23,7 @@ func (app *application) home(w http.ResponseWriter, r *http.Request) {
 
 func (app *application) showToDoItemDetails(w http.ResponseWriter, r *http.Request) {
 
-	id := r.URL.Query().Get("id")
+	id := r.URL.Query().Get(":id")
 	if id == "" {
 		app.clientError(w, http.StatusBadRequest)
 		return
@@ -49,13 +43,7 @@ func (app *application) showToDoItemDetails(w http.ResponseWriter, r *http.Reque
 	app.render(w, r, "show.page.tmpl", data)
 }
 
-func (app *application) createToDoItemDetails(w http.ResponseWriter, r *http.Request) {
-	if r.Method != "POST" {
-		w.Header().Set("Allow", "POST")
-		app.clientError(w, http.StatusMethodNotAllowed)
-		return
-	}
-
+func (app *application) createToDoItem(w http.ResponseWriter, r *http.Request) {
 	description := "test from GoToDo app"
 	affected_row, err := app.todoitems.Save(description)
 	if err != nil {
@@ -66,4 +54,8 @@ func (app *application) createToDoItemDetails(w http.ResponseWriter, r *http.Req
 	http.Redirect(w, r, fmt.Sprintf("/item-details?id=%d", affected_row), http.StatusSeeOther)
 
 	w.Write([]byte("Create ToDO item"))
+}
+
+func (app *application) createToDoItemFrom(w http.ResponseWriter, r *http.Request) {
+	w.Write([]byte("Create a new todoitem..."))
 }
