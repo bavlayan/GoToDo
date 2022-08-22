@@ -57,5 +57,5 @@ func (app *application) createToDoItem(w http.ResponseWriter, r *http.Request) {
 }
 
 func (app *application) createToDoItemFrom(w http.ResponseWriter, r *http.Request) {
-	w.Write([]byte("Create a new todoitem..."))
+	app.render(w, r, "create.page.tmpl", nil)
 }
