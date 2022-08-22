@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"net/url"
 	"path/filepath"
 	"text/template"
 	"time"
@@ -12,6 +13,8 @@ import (
 type templateData struct {
 	TodoItem  *models.TodoItems
 	TodoItems []*models.TodoItems
+	FormData  url.Values
+	FormErros map[string]string
 }
 
 var functions = template.FuncMap{

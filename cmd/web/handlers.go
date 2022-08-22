@@ -1,8 +1,8 @@
 package main
 
 import (
-	"fmt"
 	"net/http"
+	"strings"
 
 	"github.com/bavlayan/GoToDo/pkg/models"
 )
@@ -44,16 +44,35 @@ func (app *application) showToDoItemDetails(w http.ResponseWriter, r *http.Reque
 }
 
 func (app *application) createToDoItem(w http.ResponseWriter, r *http.Request) {
-	description := "test from GoToDo app"
-	affected_row, err := app.todoitems.Save(description)
+	err := r.ParseForm()
+	if err != nil {
+		app.clientError(w, http.StatusBadRequest)
+		return
+	}
+
+	errors := make(map[string]string)
+
+	item_description := r.PostForm.Get("itemdescription")
+
+	if strings.TrimSpace(item_description) == "" {
+		errors["itemdescription"] = "This field cannot be blank"
+	}
+
+	if len(errors) > 0 {
+		app.render(w, r, "create.page.tmpl", &templateData{
+			FormErros: errors,
+			FormData:  r.PostForm,
+		})
+		return
+	}
+
+	_, err = app.todoitems.Save(item_description)
 	if err != nil {
 		app.serverError(w, err)
 		return
 	}
 
-	http.Redirect(w, r, fmt.Sprintf("/item-details?id=%d", affected_row), http.StatusSeeOther)
-
-	w.Write([]byte("Create ToDO item"))
+	http.Redirect(w, r, "/", http.StatusSeeOther)
 }
 
 func (app *application) createToDoItemFrom(w http.ResponseWriter, r *http.Request) {
