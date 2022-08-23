@@ -38,7 +38,9 @@ func (app *application) showToDoItemDetails(w http.ResponseWriter, r *http.Reque
 		return
 	}
 
-	data := &templateData{TodoItem: td}
+	data := &templateData{
+		TodoItem: td,
+	}
 
 	app.render(w, r, "show.page.tmpl", data)
 }
@@ -60,8 +62,8 @@ func (app *application) createToDoItem(w http.ResponseWriter, r *http.Request) {
 
 	if len(errors) > 0 {
 		app.render(w, r, "create.page.tmpl", &templateData{
-			FormErros: errors,
-			FormData:  r.PostForm,
+			FormErrors: errors,
+			FormData:   r.PostForm,
 		})
 		return
 	}
@@ -76,5 +78,8 @@ func (app *application) createToDoItem(w http.ResponseWriter, r *http.Request) {
 }
 
 func (app *application) createToDoItemFrom(w http.ResponseWriter, r *http.Request) {
-	app.render(w, r, "create.page.tmpl", nil)
+	errors := make(map[string]string)
+	app.render(w, r, "create.page.tmpl", &templateData{
+		FormErrors: errors,
+	})
 }

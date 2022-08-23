@@ -11,10 +11,10 @@ import (
 )
 
 type templateData struct {
-	TodoItem  *models.TodoItems
-	TodoItems []*models.TodoItems
-	FormData  url.Values
-	FormErros map[string]string
+	TodoItem   *models.TodoItems
+	TodoItems  []*models.TodoItems
+	FormData   url.Values
+	FormErrors map[string]string
 }
 
 var functions = template.FuncMap{
