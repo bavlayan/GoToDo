@@ -7,9 +7,11 @@ import (
 	"net/http"
 	"os"
 	"text/template"
+	"time"
 
 	"github.com/bavlayan/GoToDo/pkg/models/mysql"
 	_ "github.com/go-sql-driver/mysql"
+	"github.com/golangcollege/sessions"
 )
 
 type application struct {
@@ -17,12 +19,15 @@ type application struct {
 	infoLog       *log.Logger
 	todoitems     *mysql.TodoItemModel
 	templateCache map[string]*template.Template
+	session       *sessions.Session
 }
 
 func main() {
 
 	addr := flag.String("addr", ":4444", "HTTP network address")
 	dsn := flag.String("dsn", "todoapp_dbuser:password@/gotodo_db?parseTime=true", "MySQL database connection string")
+	secret := flag.String("secret", "s6Ndh+pPbnzHbS*+9Pk8qGWhTzbpa@ge", "Secret for session")
+
 	flag.Parse()
 
 	infoLog := log.New(os.Stdout, "INFO\t", log.Ldate|log.Ltime)
@@ -40,6 +45,9 @@ func main() {
 		errorLog.Fatal(err)
 	}
 
+	session := sessions.New([]byte(*secret))
+	session.Lifetime = 12 * time.Hour
+
 	app := &application{
 		errorLog: errorLog,
 		infoLog:  infoLog,
@@ -47,6 +55,7 @@ func main() {
 			DB: db,
 		},
 		templateCache: templateCache,
+		session:       session,
 	}
 
 	srv := &http.Server{

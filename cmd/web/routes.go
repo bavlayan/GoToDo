@@ -10,12 +10,13 @@ import (
 func (app *application) routes() http.Handler {
 
 	goToDo_middleware := alice.New(app.recoverPanic, app.logRequest, secureHeaders)
+	dynamic_middleware := alice.New(app.session.Enable)
 
 	mux := pat.New()
-	mux.Get("/", http.HandlerFunc(app.home))
-	mux.Get("/todoitems/item-details/:id", http.HandlerFunc(app.showToDoItemDetails))
-	mux.Post("/todoitems/create-todo-item", http.HandlerFunc(app.createToDoItem))
-	mux.Get("/todoitems/create-todo-item", http.HandlerFunc(app.createToDoItemFrom))
+	mux.Get("/", dynamic_middleware.ThenFunc(http.HandlerFunc(app.home)))
+	mux.Get("/todoitems/item-details/:id", dynamic_middleware.ThenFunc(http.HandlerFunc(app.showToDoItemDetails)))
+	mux.Post("/todoitems/create-todo-item", dynamic_middleware.ThenFunc(http.HandlerFunc(app.createToDoItem)))
+	mux.Get("/todoitems/create-todo-item", dynamic_middleware.ThenFunc(http.HandlerFunc(app.createToDoItemFrom)))
 
 	fileServer := http.FileServer(http.Dir("./ui/static/"))
 	mux.Get("/static/", http.StripPrefix("/static", fileServer))

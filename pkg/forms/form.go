@@ -25,3 +25,7 @@ func (f *Form) Require(fields ...string) {
 		}
 	}
 }
+
+func (f *Form) Valid() bool {
+	return len(f.Errors) == 0
+}

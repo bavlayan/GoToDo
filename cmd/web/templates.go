@@ -2,19 +2,19 @@ package main
 
 import (
 	"fmt"
-	"net/url"
 	"path/filepath"
 	"text/template"
 	"time"
 
+	"github.com/bavlayan/GoToDo/pkg/forms"
 	"github.com/bavlayan/GoToDo/pkg/models"
 )
 
 type templateData struct {
-	TodoItem   *models.TodoItems
-	TodoItems  []*models.TodoItems
-	FormData   url.Values
-	FormErrors map[string]string
+	TodoItem  *models.TodoItems
+	TodoItems []*models.TodoItems
+	Form      *forms.Form
+	Flash     string
 }
 
 var functions = template.FuncMap{

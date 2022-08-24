@@ -2,8 +2,8 @@ package main
 
 import (
 	"net/http"
-	"strings"
 
+	"github.com/bavlayan/GoToDo/pkg/forms"
 	"github.com/bavlayan/GoToDo/pkg/models"
 )
 
@@ -52,18 +52,14 @@ func (app *application) createToDoItem(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	errors := make(map[string]string)
+	form := forms.New(r.PostForm)
+	form.Require("itemdescription")
 
 	item_description := r.PostForm.Get("itemdescription")
 
-	if strings.TrimSpace(item_description) == "" {
-		errors["itemdescription"] = "This field cannot be blank"
-	}
-
-	if len(errors) > 0 {
+	if !form.Valid() {
 		app.render(w, r, "create.page.tmpl", &templateData{
-			FormErrors: errors,
-			FormData:   r.PostForm,
+			Form: form,
 		})
 		return
 	}
@@ -78,8 +74,7 @@ func (app *application) createToDoItem(w http.ResponseWriter, r *http.Request) {
 }
 
 func (app *application) createToDoItemFrom(w http.ResponseWriter, r *http.Request) {
-	errors := make(map[string]string)
 	app.render(w, r, "create.page.tmpl", &templateData{
-		FormErrors: errors,
+		Form: forms.New(nil),
 	})
 }

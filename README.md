@@ -21,5 +21,18 @@ GoToDo is "to do" app that is developed for learning golang.
     * Subtree paths
     * Fixed paths
 
+### SQL Table Scripts
+GoToDO app has one db table.
+
+```sql
+CREATE TABLE tbl_todoitems (
+  id VARCHAR(36) NOT NULL,
+  completed TINYINT(1) NOT NULL DEFAULT 0,
+  created_date DATETIME NULL DEFAULT NOW(),
+  description VARCHAR(1024) NULL,
+  deleted TINYINT(1) NOT NULL DEFAULT 0,
+PRIMARY KEY (id));
+```
+
 
 ### References
