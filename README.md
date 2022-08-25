@@ -36,3 +36,5 @@ PRIMARY KEY (id));
 
 
 ### References
+
+Let's Go! Learn to build professional web application with Go | [Alex Edvards](https://lets-go.alexedwards.net/)
