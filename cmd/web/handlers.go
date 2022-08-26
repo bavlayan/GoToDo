@@ -1,11 +1,32 @@
 package main
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/bavlayan/GoToDo/pkg/forms"
 	"github.com/bavlayan/GoToDo/pkg/models"
 )
+
+func (app *application) signupUserForm(w http.ResponseWriter, r *http.Request) {
+	fmt.Fprintln(w, "Display the user signup form..")
+}
+
+func (app *application) signupUser(w http.ResponseWriter, r *http.Request) {
+	fmt.Fprintln(w, "Create a new user")
+}
+
+func (app *application) loginUserForm(w http.ResponseWriter, r *http.Request) {
+	fmt.Fprintln(w, "Display the user login form...")
+}
+
+func (app *application) loginUser(w http.ResponseWriter, r *http.Request) {
+	fmt.Fprintln(w, "Authenticate and login the user...")
+}
+
+func (app *application) logoutUser(w http.ResponseWriter, r *http.Request) {
+	fmt.Fprintln(w, "Logout the user...")
+}
 
 func (app *application) home(w http.ResponseWriter, r *http.Request) {
 	td_items, err := app.todoitems.GetDaily()
@@ -14,8 +35,10 @@ func (app *application) home(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	success_message := app.session.PopString(r, "success_message")
 	data := &templateData{
 		TodoItems: td_items,
+		Flash:     success_message,
 	}
 
 	app.render(w, r, "home.page.tmpl", data)
@@ -69,6 +92,8 @@ func (app *application) createToDoItem(w http.ResponseWriter, r *http.Request) {
 		app.serverError(w, err)
 		return
 	}
+
+	app.session.Put(r, "success_message", "To Do Item successfully created!")
 
 	http.Redirect(w, r, "/", http.StatusSeeOther)
 }

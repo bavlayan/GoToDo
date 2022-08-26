@@ -22,6 +22,9 @@
                 {{else}}
                     <p class="text-center">There's nothing to see here.. Good! &#x1F60E;</p>
                 {{end}}
+                {{with .Flash}}
+                    <p class='text-success text-center'>{{.}}</label>
+                {{end}}
             </div>
             <div class="col"></div>
         </div>   

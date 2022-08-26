@@ -20,6 +20,7 @@ type application struct {
 	todoitems     *mysql.TodoItemModel
 	templateCache map[string]*template.Template
 	session       *sessions.Session
+	user          *mysql.UserModel
 }
 
 func main() {
@@ -56,6 +57,9 @@ func main() {
 		},
 		templateCache: templateCache,
 		session:       session,
+		user: &mysql.UserModel{
+			DB: db,
+		},
 	}
 
 	srv := &http.Server{

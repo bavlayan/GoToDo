@@ -22,10 +22,11 @@ GoToDo is "to do" app that is developed for learning golang.
     * Fixed paths
 
 ### SQL Table Scripts
-GoToDO app has one db table.
+GoToDO app has two db tables.
 
+* tbl_todoitems
 ```sql
-CREATE TABLE tbl_todoitems (
+CREATE TABLE gotodo_db.tbl_todoitems (
   id VARCHAR(36) NOT NULL,
   completed TINYINT(1) NOT NULL DEFAULT 0,
   created_date DATETIME NULL DEFAULT NOW(),
@@ -33,7 +34,18 @@ CREATE TABLE tbl_todoitems (
   deleted TINYINT(1) NOT NULL DEFAULT 0,
 PRIMARY KEY (id));
 ```
+* tbl_users
+```sql
+CREATE TABLE gotodo_db.tbl_users (
+  id VARCHAR(36) NOT NULL,
+  name VARCHAR(255) NOT NULL,
+  email VARCHAR(255) NOT NULL,
+  hashed_password VARCHAR(60) NOT NULL,
+  created_date DATETIME NULL DEFAULT NOW(),
+PRIMARY KEY (id));
 
+ALTER TABLE gotodo_db.tbl_users ADD CONSTRAINT users_uc_email UNIQUE (email);
+```
 
 ### References
 
