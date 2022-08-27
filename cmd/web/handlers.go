@@ -9,11 +9,32 @@ import (
 )
 
 func (app *application) signupUserForm(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintln(w, "Display the user signup form..")
+	app.render(w, r, "signup.page.tmpl", &templateData{
+		Form: forms.New(nil),
+	})
 }
 
 func (app *application) signupUser(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintln(w, "Create a new user")
+	err := r.ParseForm()
+
+	if err != nil {
+		app.clientError(w, http.StatusBadRequest)
+		return
+	}
+
+	form := forms.New(r.PostForm)
+	form.Require("name", "email", "password")
+	form.MatchesPattern("email", forms.EmailRX)
+	form.MinLength("password", 8)
+
+	if !form.Valid() {
+		app.render(w, r, "signup.page.tmpl", &templateData{
+			Form: form,
+		})
+		return
+	}
+
+	fmt.Fprintln(w, "Create a new user...")
 }
 
 func (app *application) loginUserForm(w http.ResponseWriter, r *http.Request) {
