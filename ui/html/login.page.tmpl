@@ -1,0 +1,31 @@
+{{template "base" .}}
+
+{{define "title"}}Login - GoToDo{{end}}
+
+{{define "body"}}
+<div class="container py-3">
+    <div class="row">
+        <div class="col"></div>
+        <div class="col-6">
+            <form action="/user/login" method="POST">
+                {{with .Form}}
+                    {{with .Errors.Get "generic"}}
+                        <label class='error text-danger'>{{.}}</label>
+                    {{end}} 
+                    <div class="form-group todo-form-space">
+                        <label>Email address</label>
+                        <input type="text" name="email" value='{{.Get "email"}}' class="form-control" placeholder="Enter email">
+                    </div>
+                    <div class="form-group todo-form-space">
+                        <label>Password</label>
+                        <input type="password" name="password" class="form-control" placeholder="Password">
+                    </div>
+                    <button type="submit" value="Login" class="btn btn-success todo-form-space">Sign-Up</button>
+                {{end}}
+            </form>
+        </div>
+        <div class="col"></div>
+    </div>
+</div>
+
+{{end}}

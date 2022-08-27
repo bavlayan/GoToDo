@@ -5,7 +5,11 @@ import (
 	"time"
 )
 
-var ErrNoRecord = errors.New("models: no matching record found")
+var (
+	ErrNoRecord           = errors.New("models: no matching record found")
+	ErrInvalidCredentials = errors.New("models: invalid credentiasl")
+	ErrDuplicateEmail     = errors.New("models: duplicate email")
+)
 
 type TodoItems struct {
 	ID          string

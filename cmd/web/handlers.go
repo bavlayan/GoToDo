@@ -34,15 +34,54 @@ func (app *application) signupUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	fmt.Fprintln(w, "Create a new user...")
+	name := form.Get("name")
+	email := form.Get("email")
+	password := form.Get("password")
+	err = app.user.Insert(name, email, password)
+	if err == models.ErrDuplicateEmail {
+		form.Errors.Add("email", "Address is already in use")
+		app.render(w, r, "signup.page.tmpl", &templateData{
+			Form: form,
+		})
+		return
+	} else if err != nil {
+		app.serverError(w, err)
+	}
+
+	app.session.Put(r, "signup_success", "Your signup was successful.")
+	http.Redirect(w, r, "/user/login", http.StatusSeeOther)
 }
 
 func (app *application) loginUserForm(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintln(w, "Display the user login form...")
+	app.render(w, r, "login.page.tmpl", &templateData{
+		Form: forms.New(nil),
+	})
 }
 
 func (app *application) loginUser(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintln(w, "Authenticate and login the user...")
+	err := r.ParseForm()
+	if err != nil {
+		app.clientError(w, http.StatusBadRequest)
+		return
+	}
+	form := forms.New(r.PostForm)
+	email := form.Get("email")
+	password := form.Get("password")
+	id, err := app.user.Authenticate(email, password)
+	if err == models.ErrInvalidCredentials {
+		form.Errors.Add("generic", "Email or Password is incorrect")
+		app.render(w, r, "login.page.tmpl", &templateData{
+			Form: form,
+		})
+		return
+	} else if err != nil {
+		app.serverError(w, err)
+		return
+	}
+
+	app.session.Put(r, "userID", id)
+
+	http.Redirect(w, r, "/todoitems/create-todo-item", http.StatusSeeOther)
 }
 
 func (app *application) logoutUser(w http.ResponseWriter, r *http.Request) {
