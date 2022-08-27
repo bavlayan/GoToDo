@@ -2,6 +2,7 @@ package mysql
 
 import (
 	"database/sql"
+	"fmt"
 	"strings"
 
 	"github.com/bavlayan/GoToDo/pkg/models"
@@ -48,7 +49,7 @@ func (m *UserModel) Authenticate(email, password string) (string, error) {
 	} else if err != nil {
 		return "", err
 	}
-
+	fmt.Println(id)
 	return id, nil
 }
 

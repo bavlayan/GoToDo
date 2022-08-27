@@ -13,16 +13,16 @@ func (app *application) routes() http.Handler {
 	dynamic_middleware := alice.New(app.session.Enable)
 
 	mux := pat.New()
-	mux.Get("/", dynamic_middleware.ThenFunc(http.HandlerFunc(app.home)))
-	mux.Get("/todoitems/item-details/:id", dynamic_middleware.ThenFunc(http.HandlerFunc(app.showToDoItemDetails)))
-	mux.Post("/todoitems/create-todo-item", dynamic_middleware.ThenFunc(http.HandlerFunc(app.createToDoItem)))
-	mux.Get("/todoitems/create-todo-item", dynamic_middleware.ThenFunc(http.HandlerFunc(app.createToDoItemFrom)))
+	mux.Get("/", dynamic_middleware.Append(app.requireAuthenticatedUser).ThenFunc(http.HandlerFunc(app.home)))
+	mux.Get("/todoitems/item-details/:id", dynamic_middleware.Append(app.requireAuthenticatedUser).ThenFunc(http.HandlerFunc(app.showToDoItemDetails)))
+	mux.Post("/todoitems/create-todo-item", dynamic_middleware.Append(app.requireAuthenticatedUser).ThenFunc(http.HandlerFunc(app.createToDoItem)))
+	mux.Get("/todoitems/create-todo-item", dynamic_middleware.Append(app.requireAuthenticatedUser).ThenFunc(http.HandlerFunc(app.createToDoItemFrom)))
 
 	mux.Get("/user/signup", dynamic_middleware.ThenFunc(app.signupUserForm))
 	mux.Post("/user/signup", dynamic_middleware.ThenFunc(app.signupUser))
 	mux.Get("/user/login", dynamic_middleware.ThenFunc(app.loginUserForm))
 	mux.Post("/user/login", dynamic_middleware.ThenFunc(app.loginUser))
-	mux.Post("/user/logout", dynamic_middleware.ThenFunc(app.logoutUser))
+	mux.Post("/user/logout", dynamic_middleware.Append(app.requireAuthenticatedUser).ThenFunc(app.logoutUser))
 
 	fileServer := http.FileServer(http.Dir("./ui/static/"))
 	mux.Get("/static/", http.StripPrefix("/static", fileServer))

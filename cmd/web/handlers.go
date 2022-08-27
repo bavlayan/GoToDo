@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"net/http"
 
 	"github.com/bavlayan/GoToDo/pkg/forms"
@@ -85,7 +84,13 @@ func (app *application) loginUser(w http.ResponseWriter, r *http.Request) {
 }
 
 func (app *application) logoutUser(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintln(w, "Logout the user...")
+	app.session.Remove(r, "userID")
+	app.session.Put(r, "logout_message", "You have been logged out successfully!")
+	http.Redirect(w, r, "/", 303)
+}
+
+func (app *application) authenticatedUser(r *http.Request) string {
+	return app.session.GetString(r, "userID")
 }
 
 func (app *application) home(w http.ResponseWriter, r *http.Request) {

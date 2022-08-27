@@ -30,10 +30,18 @@ func (app *application) render(w http.ResponseWriter, r *http.Request, name stri
 
 	buf := new(bytes.Buffer)
 
-	err := ts.Execute(buf, td)
+	err := ts.Execute(buf, app.aaddDefaultData(td, r))
 	if err != nil {
 		app.serverError(w, err)
 	}
 
 	buf.WriteTo(w)
+}
+
+func (app *application) aaddDefaultData(td *templateData, r *http.Request) *templateData {
+	if td == nil {
+		td = &templateData{}
+	}
+	td.AuthenticatedUser = app.authenticatedUser(r)
+	return td
 }
