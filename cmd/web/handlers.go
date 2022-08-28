@@ -7,6 +7,10 @@ import (
 	"github.com/bavlayan/GoToDo/pkg/models"
 )
 
+func ping(w http.ResponseWriter, r *http.Request) {
+	w.Write([]byte("OK"))
+}
+
 func (app *application) signupUserForm(w http.ResponseWriter, r *http.Request) {
 	app.render(w, r, "signup.page.tmpl", &templateData{
 		Form: forms.New(nil),
@@ -88,10 +92,6 @@ func (app *application) logoutUser(w http.ResponseWriter, r *http.Request) {
 	app.session.Put(r, "logout_message", "You have been logged out successfully!")
 	http.Redirect(w, r, "/", 303)
 }
-
-/*func (app *application) authenticatedUser(r *http.Request) string {
-	return app.session.GetString(r, "userID")
-}*/
 
 func (app *application) home(w http.ResponseWriter, r *http.Request) {
 	td_items, err := app.todoitems.GetDaily()
