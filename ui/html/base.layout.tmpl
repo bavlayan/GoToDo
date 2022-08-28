@@ -25,7 +25,8 @@
                 <div class="col-md-3 text-end">
                     {{if .AuthenticatedUser}}
                         <form action='/user/logout' method='POST'>
-                            <button type="submit" class="btn btn-outline-danger me-2">Logout</button>
+                            <input type='hidden' name='csrf_token' value='{{.CSTFToken}}'></input>
+                            <button type="submit" class="btn btn-outline-danger me-2">Logout ({{.AuthenticatedUser.Name}})</button>
                         </form>
                     {{else}}
                         <a href="/user/login" class="btn btn-outline-primary me-2">Login</a>

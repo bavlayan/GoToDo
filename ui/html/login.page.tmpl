@@ -8,6 +8,7 @@
         <div class="col"></div>
         <div class="col-6">
             <form action="/user/login" method="POST">
+                <input type='hidden' name='csrf_token' value='{{.CSRFToken}}'>
                 {{with .Form}}
                     {{with .Errors.Get "generic"}}
                         <label class='error text-danger'>{{.}}</label>

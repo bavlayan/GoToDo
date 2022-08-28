@@ -5,6 +5,9 @@ import (
 	"fmt"
 	"net/http"
 	"runtime/debug"
+
+	"github.com/bavlayan/GoToDo/pkg/models"
+	"github.com/justinas/nosurf"
 )
 
 func (app *application) serverError(w http.ResponseWriter, err error) {
@@ -43,5 +46,14 @@ func (app *application) aaddDefaultData(td *templateData, r *http.Request) *temp
 		td = &templateData{}
 	}
 	td.AuthenticatedUser = app.authenticatedUser(r)
+	td.CSRFToken = nosurf.Token(r)
 	return td
+}
+
+func (app *application) authenticatedUser(r *http.Request) *models.User {
+	user, ok := r.Context().Value(contextKeyUser).(*models.User)
+	if !ok {
+		return nil
+	}
+	return user
 }

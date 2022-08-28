@@ -15,7 +15,8 @@ type templateData struct {
 	TodoItems         []*models.TodoItems
 	Form              *forms.Form
 	Flash             string
-	AuthenticatedUser string
+	AuthenticatedUser *models.User
+	CSRFToken         string
 }
 
 var functions = template.FuncMap{

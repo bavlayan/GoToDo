@@ -8,16 +8,17 @@
         <div class="col"></div>
         <div class="col-6">
             <form action="/todoitems/create-todo-item" method="POST">
+                <input type='hidden' name='csrf_token' value='{{.CSRFToken}}'>
                 {{with .Form}}
-                <div class="form-group">
-                    <label for="exampleInputEmail1">Item Description</label>                
-                    <input name='itemdescription' type="text" class="form-control" value='{{.Get "itemdescription"}}' placeholder="Enter To Do Item Description">
-                    {{with .Errors.Get "itemdescription"}}
-                        <label class='error text-danger'>{{.}}</label>
-                    {{end}}                 
-                </div>
-                <button type="submit" class="btn btn-primary todo-form-space">Submit</button>
-                <button type="" class="btn btn-danger todo-form-space">Cancel</button>
+                    <div class="form-group">
+                        <label for="exampleInputEmail1">Item Description</label>                
+                        <input name='itemdescription' type="text" class="form-control" value='{{.Get "itemdescription"}}' placeholder="Enter To Do Item Description">
+                        {{with .Errors.Get "itemdescription"}}
+                            <label class='error text-danger'>{{.}}</label>
+                        {{end}}                 
+                    </div>
+                    <button type="submit" class="btn btn-primary todo-form-space">Submit</button>
+                    <button type="" class="btn btn-danger todo-form-space">Cancel</button>
                 {{end}}
             </form>
         </div>

@@ -15,7 +15,10 @@ GoToDo is "to do" app that is developed for learning golang.
 * `DB.QueryRow()` returns a single row
 * `DB.Exec()` doesn't return any rows
 * [Alice](https://github.com/justinas/alice) provides a convenient way to chain your HTTP middleware functions and the app handler
+* [nosurf](https://github.com/justinas/nosurf) is an HTTP package for Go that helps you prevent Cross-Site Request Forgery attacks. It acts like a middleware and therefore is compatible with basically any Go HTTP application.
 * Go servemux doesn't support method based routing or semantic URLs with variables in them.
+* In essence every `http.Request` that our handlers process has a `context.Context` object embedded in it, which we can use to store information during the lifetime of the request
+* It's important to emphasize that request context should only be used store information relevant to the lifetime of specific request. The Go documentation for `context.Context` warns. **_Use context Values only for request-scoped data transits processes and APIs_** That means you should not use it to pass dependencies that exist outside of the lifetime of a request - like loggers, template caches and your database connection pool - to your middleware and handlers
 * The `html/template` package automatically escapes any data that is yielded between `{{}}` tags such as avoiding XSS attacks
 * Servemux has two types of URL patters
     * Subtree paths

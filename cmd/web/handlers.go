@@ -89,9 +89,9 @@ func (app *application) logoutUser(w http.ResponseWriter, r *http.Request) {
 	http.Redirect(w, r, "/", 303)
 }
 
-func (app *application) authenticatedUser(r *http.Request) string {
+/*func (app *application) authenticatedUser(r *http.Request) string {
 	return app.session.GetString(r, "userID")
-}
+}*/
 
 func (app *application) home(w http.ResponseWriter, r *http.Request) {
 	td_items, err := app.todoitems.GetDaily()
