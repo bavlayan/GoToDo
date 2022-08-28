@@ -8,12 +8,30 @@ import (
 	"net/http/cookiejar"
 	"net/http/httptest"
 	"testing"
+	"time"
+
+	"github.com/bavlayan/GoToDo/pkg/models/mock"
+	"github.com/golangcollege/sessions"
 )
 
 func newTestApplication(t *testing.T) *application {
+
+	templateCache, err := newTemplateCache("./ui/html/")
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	session := sessions.New([]byte("s6Ndh+pPbnzHbS*+9Pk8qGWhTzbpa@ge"))
+	session.Lifetime = 12 * time.Hour
+	session.Secure = true
+
 	return &application{
-		errorLog: log.New(io.Discard, "", 0),
-		infoLog:  log.New(io.Discard, "", 0),
+		errorLog:      log.New(io.Discard, "", 0),
+		infoLog:       log.New(io.Discard, "", 0),
+		session:       session,
+		todoitems:     &mock.TodoItemModel{},
+		templateCache: templateCache,
+		user:          &mock.UserModel{},
 	}
 }
 

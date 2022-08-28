@@ -2,7 +2,6 @@ package mysql
 
 import (
 	"database/sql"
-	"fmt"
 	"strings"
 
 	"github.com/bavlayan/GoToDo/pkg/models"
@@ -49,10 +48,17 @@ func (m *UserModel) Authenticate(email, password string) (string, error) {
 	} else if err != nil {
 		return "", err
 	}
-	fmt.Println(id)
 	return id, nil
 }
 
 func (m *UserModel) Get(id string) (*models.User, error) {
-	return nil, nil
+	currentUser := &models.User{}
+	row := m.DB.QueryRow("SELECT id, name, email FROM tbl_users WHERE id = ?", id)
+	err := row.Scan(&currentUser.ID, &currentUser.Name, &currentUser.Email)
+	if err == sql.ErrNoRows {
+		return nil, models.ErrNoRecord
+	} else if err != nil {
+		return nil, err
+	}
+	return currentUser, nil
 }

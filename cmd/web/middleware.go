@@ -26,7 +26,6 @@ func (app *application) authenticate(next http.Handler) http.Handler {
 			app.serverError(w, err)
 			return
 		}
-
 		ctx := context.WithValue(r.Context(), contextKeyUser, user)
 		next.ServeHTTP(w, r.WithContext(ctx))
 	})

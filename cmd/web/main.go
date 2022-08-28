@@ -9,6 +9,7 @@ import (
 	"text/template"
 	"time"
 
+	"github.com/bavlayan/GoToDo/pkg/models"
 	"github.com/bavlayan/GoToDo/pkg/models/mysql"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/golangcollege/sessions"
@@ -19,12 +20,20 @@ type contextKey string
 var contextKeyUser = contextKey("user")
 
 type application struct {
-	errorLog      *log.Logger
-	infoLog       *log.Logger
-	todoitems     *mysql.TodoItemModel
+	errorLog  *log.Logger
+	infoLog   *log.Logger
+	todoitems interface {
+		Save(string) (int, error)
+		GetDaily() ([]*models.TodoItems, error)
+		Get(string) (*models.TodoItems, error)
+	}
 	templateCache map[string]*template.Template
 	session       *sessions.Session
-	user          *mysql.UserModel
+	user          interface {
+		Insert(string, string, string) error
+		Authenticate(string, string) (string, error)
+		Get(string) (*models.User, error)
+	}
 }
 
 func main() {
